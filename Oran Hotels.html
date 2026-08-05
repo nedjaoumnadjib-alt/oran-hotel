@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oran Hotels — Find your stay in Oran</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#132A2E;
+    --ink-soft:#4B6469;
+    --line:#E1E8E6;
+    --sand:#FBF7EF;
+    --sand-deep:#F3ECDD;
+    --paper:#FFFFFF;
+    --teal:#0F5C63;
+    --teal-dark:#0A3A40;
+    --teal-tint:#E4EFEE;
+    --coral:#E1603E;
+    --coral-dark:#C24C2D;
+    --coral-tint:#FBE7DF;
+    --gold:#C99A3E;
+    --success:#2C8C5A;
+    --success-tint:#E5F4EB;
+    --warn:#C6402F;
+    --warn-tint:#FCE9E6;
+    --shadow-sm: 0 1px 3px rgba(19,42,46,0.08);
+    --shadow-md: 0 8px 24px rgba(19,42,46,0.10);
+    --shadow-lg: 0 20px 50px rgba(19,42,46,0.16);
+    --radius: 14px;
+    --font-display: 'Fraunces', serif;
+    --font-body: 'Public Sans', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:var(--font-body);
+    color:var(--ink);
+    background:var(--sand);
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;cursor:pointer;}
+  input{font-family:inherit;}
+  ::selection{background:var(--coral-tint);color:var(--coral-dark);}
+  :focus-visible{outline:2px solid var(--teal);outline-offset:2px;}
+
+  .wrap{max-width:1280px;margin:0 auto;padding:0 32px;}
+
+  /* ---------- Arch motif (signature) ---------- */
+  .arch-top{
+    border-radius: 999px 999px var(--radius) var(--radius);
+  }
+  .zellige-divider{
+    height:14px;
+    width:100%;
+    background-image: repeating-linear-gradient(135deg, var(--teal) 0 2px, transparent 2px 16px),
+                       repeating-linear-gradient(45deg, var(--coral) 0 2px, transparent 2px 16px);
+    background-size: 22px 14px;
+    opacity:0.35;
+  }
+
+  /* ---------- NAV ---------- */
+  .nav{
+    position:sticky; top:0; z-index:60;
+    background:var(--paper);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    display:flex;align-items:center;justify-content:space-between;
+    height:72px; gap:24px;
+  }
+  .logo{
+    display:flex;align-items:center;gap:10px;
+    font-family:var(--font-display);
+    font-weight:600; font-size:23px; color:var(--teal-dark);
+    letter-spacing:0.2px;
+  }
+  .logo svg{flex:none;}
+  .nav-links{display:flex;gap:28px;align-items:center;}
+  .nav-links a{
+    font-size:14.5px; font-weight:600; color:var(--ink-soft);
+    padding:8px 2px; position:relative;
+  }
+  .nav-links a.active{color:var(--teal-dark);}
+  .nav-links a.active::after{
+    content:'';position:absolute;left:0;right:0;bottom:-2px;height:2px;background:var(--coral);border-radius:2px;
+  }
+  .nav-right{display:flex;align-items:center;gap:18px;}
+  .nav-right .divider{width:1px;height:22px;background:var(--line);}
+  .icon-btn{
+    display:flex;align-items:center;gap:7px;font-size:14px;font-weight:600;color:var(--ink-soft);
+    background:none;border:none;padding:6px;border-radius:8px;
+  }
+  .icon-btn:hover{background:var(--sand-deep);color:var(--ink);}
+  .avatar{
+    width:32px;height:32px;border-radius:50%;background:var(--teal);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;
+  }
+  .list-property{font-size:14px;font-weight:600;color:var(--teal-dark);white-space:nowrap;}
+  .list-property:hover{color:var(--coral-dark);}
+
+  .compact-search{
+    display:none; align-items:center; gap:10px; background:var(--sand-deep);
+    border-radius:999px; padding:8px 8px 8px 16px; flex:1; max-width:520px;
+  }
+  .compact-search span{font-size:13px;font-weight:600;color:var(--ink-soft);}
+  .compact-search .sep{width:1px;height:16px;background:var(--line);}
+  .compact-search button{
+    background:var(--teal);color:#fff;border:none;border-radius:999px;
+    width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+  }
+  .nav.scrolled .compact-search{display:flex;}
+  .nav.scrolled .nav-links{display:none;}
+
+  /* ---------- HERO / SEARCH ---------- */
+  .hero{
+    background:
+      radial-gradient(1100px 420px at 15% -10%, var(--teal-tint) 0%, transparent 60%),
+      linear-gradient(180deg, var(--sand) 0%, var(--sand) 100%);
+    padding:54px 0 26px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:'';position:absolute; right:-60px; top:-40px; width:340px;height:340px;
+    background: conic-gradient(from 210deg, var(--coral-tint), transparent 40%);
+    border-radius:50%; opacity:0.6; pointer-events:none;
+  }
+  .hero-eyebrow{
+    display:flex;align-items:center;gap:8px;
+    font-size:12.5px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--coral-dark);
+    margin-bottom:10px;
+  }
+  .hero-eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--coral);}
+  .hero h1{
+    font-family:var(--font-display);
+    font-weight:600; font-size:38px; line-height:1.15; margin:0 0 6px;
+    color:var(--teal-dark); max-width:640px;
+  }
+  .hero p.sub{
+    font-size:15.5px; color:var(--ink-soft); margin:0 0 26px; max-width:560px;
+  }
+
+  .search-card{
+    background:var(--paper); border-radius:20px; box-shadow:var(--shadow-lg);
+    padding:20px; border:1px solid var(--line); position:relative; z-index:2;
+  }
+  .search-fields{
+    display:grid; grid-template-columns: 1.5fr 1fr 1fr 1fr 0.8fr auto; gap:0;
+    border:1px solid var(--line); border-radius:14px; overflow:visible;
+  }
+  .field{
+    padding:12px 18px; border-right:1px solid var(--line); position:relative;
+  }
+  .field:last-of-type{border-right:none;}
+  .field label{
+    display:flex;align-items:center;gap:6px;
+    font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em;
+    color:var(--ink-soft); margin-bottom:4px;
+  }
+  .field .val{font-size:15px; font-weight:600; color:var(--ink);}
+  .field .val small{display:block;font-weight:500;font-size:12.5px;color:var(--ink-soft);margin-top:1px;}
+  .field button.val{padding:0;border:0;background:transparent;text-align:left;font-family:inherit;width:100%;cursor:pointer;}
+  .field input,.field select{width:100%;border:0;background:transparent;color:var(--ink);font:600 15px var(--font-body);padding:0;outline:none;cursor:pointer;}
+  .field input::-webkit-calendar-picker-indicator{cursor:pointer;}
+  .field:hover{background:var(--sand);cursor:pointer;}
+  .search-btn{
+    background:var(--coral); color:#fff; border:none; border-radius:0 13px 13px 0;
+    padding:0 30px; font-size:15px; font-weight:700; display:flex;align-items:center;gap:8px;
+    transition:background .15s;
+  }
+  .search-btn:hover{background:var(--coral-dark);}
+
+  .autocomplete{
+    position:absolute; top:calc(100% + 8px); left:0; width:320px; background:var(--paper);
+    border:1px solid var(--line); border-radius:12px; box-shadow:var(--shadow-md);
+    padding:10px; display:none; z-index:20;
+  }
+  .field.open .autocomplete{display:block;}
+  .autocomplete .opt{padding:9px 10px;border-radius:8px;font-size:14px;display:flex;gap:10px;align-items:center;}
+  .autocomplete .opt:hover{background:var(--sand-deep);}
+  .autocomplete .opt b{font-weight:700;}
+  .autocomplete .opt span{color:var(--ink-soft);font-size:12.5px;}
+
+  .search-meta{
+    display:flex; align-items:center; gap:8px; margin-top:14px; font-size:13.5px; color:var(--ink-soft);
+  }
+  .search-meta .sep{color:var(--line);}
+  .search-meta b{color:var(--ink);font-weight:700;}
+
+  /* ---------- MAIN LAYOUT ---------- */
+  .main{display:flex;flex-direction:column;gap:22px;padding:18px 0 60px;}
+
+  /* Filters */
+  .filters{
+    position:sticky; top:88px; align-self:start; max-height:calc(100vh - 110px); overflow-y:auto;
+    background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); padding:20px;
+  }
+  .results{order:-1;width:100%;}
+  .filters{position:static;max-height:none;width:100%;}
+  .filters::-webkit-scrollbar{width:6px;}
+  .filters::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px;}
+  .filters-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+  .filters-head h3{font-size:15px;margin:0;font-family:var(--font-display);font-weight:600;}
+  .clear-link{font-size:12.5px;font-weight:700;color:var(--coral-dark);}
+  .fgroup{border-top:1px solid var(--line); padding:16px 0;}
+  .fgroup:first-of-type{border-top:none;padding-top:0;}
+  .fgroup h4{font-size:13px;font-weight:700;margin:0 0 10px;color:var(--ink);}
+  .map-toggle-btn{
+    width:100%; border:1px solid var(--line); background:var(--sand);
+    border-radius:10px; padding:0; overflow:hidden; text-align:left; display:block;
+  }
+  .map-toggle-btn .mini-map{
+    height:145px; width:100%; position:relative;background:var(--teal-tint);overflow:hidden;
+    transition:height .25s ease;
+  }
+  .map-toggle-btn.map-open .mini-map{height:310px;}
+  .map-toggle-btn .mini-map iframe{width:100%;height:100%;border:0;pointer-events:none;filter:saturate(.82) contrast(.96);}
+  .mini-map .pin{position:absolute;width:8px;height:8px;background:var(--coral);border-radius:50% 50% 50% 0;transform:rotate(-45deg);}
+  .map-markers{position:absolute;inset:0;pointer-events:auto;}
+  .map-pin{position:absolute;width:11px;height:11px;background:var(--coral);border:2px solid #fff;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 1px 3px rgba(19,42,46,.35);}
+  .map-pin:hover{z-index:3;transform:rotate(-45deg) scale(1.45);}
+  .map-hotel-popup{display:none;position:absolute;left:14px;bottom:14px;z-index:5;max-width:255px;background:#fff;border-radius:9px;padding:10px 12px;box-shadow:var(--shadow-md);text-align:left;color:var(--ink);}
+  .map-hotel-popup.show{display:block;}
+  .map-hotel-popup b{display:block;font-size:13px;color:var(--teal-dark);margin-bottom:3px;}
+  .map-hotel-popup span{font-size:11.5px;color:var(--ink-soft);}
+  .map-toggle-btn .label{
+    display:flex;align-items:center;gap:8px;padding:9px 12px;font-size:13px;font-weight:700;color:var(--teal-dark);
+  }
+  .range-hist{display:flex;align-items:flex-end;gap:2px;height:34px;margin-bottom:10px;}
+  .range-hist div{flex:1;background:var(--teal-tint);border-radius:2px 2px 0 0;}
+  .range-hist div.in-range{background:var(--teal);}
+  .range-slider{position:relative;height:4px;background:var(--line);border-radius:2px;margin:0 2px 10px;}
+  .range-slider .fill{position:absolute;left:22%;right:15%;top:0;bottom:0;background:var(--teal);border-radius:2px;}
+  .range-slider .handle{position:absolute;top:50%;width:16px;height:16px;background:#fff;border:2px solid var(--teal);border-radius:50%;transform:translate(-50%,-50%);box-shadow:var(--shadow-sm);}
+  .range-slider .handle.h1{left:22%;} .range-slider .handle.h2{left:85%;}
+  .range-labels{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink-soft);font-family:var(--font-mono);}
+  .check-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;font-size:13.5px;cursor:pointer;}
+  .check-row .left{display:flex;align-items:center;gap:9px;}
+  .check-row input{width:16px;height:16px;accent-color:var(--teal);}
+  .check-row .count{color:var(--ink-soft);font-size:12.5px;font-family:var(--font-mono);}
+  .stars-inline{color:var(--gold);letter-spacing:1px;font-size:12px;}
+  .amenity-chip-list{display:flex;flex-wrap:wrap;gap:8px;}
+  .amenity-chip{
+    border:1px solid var(--line); border-radius:999px; padding:6px 12px; font-size:12.5px; font-weight:600;
+    color:var(--ink-soft); display:flex;align-items:center;gap:5px;
+  }
+  .amenity-chip.on{background:var(--teal-tint);border-color:var(--teal);color:var(--teal-dark);}
+  .see-more{font-size:12.5px;font-weight:700;color:var(--teal-dark);margin-top:6px;display:inline-block;}
+
+  /* Results column */
+  .sortbar{
+    display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+    margin-bottom:16px;
+  }
+  .sortbar .left{display:flex;align-items:center;gap:14px;}
+  .sortbar h2{font-size:20px;margin:0;font-family:var(--font-display);font-weight:600;color:var(--teal-dark);}
+  .sortbar .count-pill{font-size:12.5px;font-family:var(--font-mono);color:var(--ink-soft);}
+  .sortbar .right{display:flex;align-items:center;gap:10px;}
+  .select-like{
+    display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--paper);
+    border-radius:10px;padding:9px 12px;font-size:13.5px;font-weight:600;position:relative;
+  }
+  .select-like .menu{
+    position:absolute;top:calc(100% + 6px);right:0;min-width:200px;background:#fff;border:1px solid var(--line);
+    border-radius:10px;box-shadow:var(--shadow-md);padding:6px;display:none;z-index:15;
+  }
+  .select-like.open .menu{display:block;}
+  .select-like .menu div{padding:9px 10px;border-radius:7px;font-size:13.5px;font-weight:500;}
+  .select-like .menu div:hover{background:var(--sand-deep);}
+  .select-like .menu div.sel{color:var(--teal-dark);font-weight:700;}
+  .view-toggle{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+  .view-toggle button{
+    padding:9px 11px;background:var(--paper);border:none;border-right:1px solid var(--line);color:var(--ink-soft);display:flex;
+  }
+  .view-toggle button:last-child{border-right:none;}
+  .view-toggle button.active{background:var(--teal-tint);color:var(--teal-dark);}
+
+  .chips-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;}
+  .chip{
+    display:flex;align-items:center;gap:7px;background:var(--teal-tint);color:var(--teal-dark);
+    border-radius:999px;padding:6px 8px 6px 13px;font-size:12.5px;font-weight:700;
+  }
+  .chip button{background:rgba(15,92,99,0.15);border:none;width:16px;height:16px;border-radius:50%;color:var(--teal-dark);font-size:11px;line-height:1;}
+
+  /* Hotel card */
+  .cards{display:flex;flex-direction:column;gap:18px;}
+  .results{container-type:inline-size;min-width:0;}
+  .card{
+    display:flex; background:var(--paper); border:1px solid var(--line); border-radius:var(--radius);
+    overflow:hidden; box-shadow:var(--shadow-sm); transition:box-shadow .18s, transform .18s; position:relative;
+  }
+  .card:hover{box-shadow:var(--shadow-md); transform:translateY(-2px);}
+  .card .media{
+    width:38%; position:relative; flex:none; min-height:230px;
+    background-size:cover; background-position:center;
+  }
+  .card .media .ad-badge{
+    position:absolute; top:12px; left:12px; background:rgba(19,42,46,0.72); color:#fff;
+    font-size:10.5px; font-weight:700; letter-spacing:0.05em; padding:4px 9px; border-radius:6px;
+  }
+  .card .media .heart{
+    position:absolute; top:12px; right:12px; width:32px;height:32px;border-radius:50%;
+    background:rgba(255,255,255,0.9); display:flex;align-items:center;justify-content:center;color:var(--coral);
+  }
+  .card .media .dots{
+    position:absolute; bottom:12px; left:50%; transform:translateX(-50%); display:flex; gap:5px;
+  }
+  .card .media .dots span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.55);}
+  .card .media .dots span.on{background:#fff;}
+  .card .media .arrow{
+    position:absolute; top:50%; transform:translateY(-50%); width:28px;height:28px;border-radius:50%;
+    background:rgba(255,255,255,0.85); display:flex;align-items:center;justify-content:center; color:var(--ink);
+    opacity:0; transition:opacity .15s;
+  }
+  .card .media:hover .arrow{opacity:1;}
+  .card .media .arrow.left{left:10px;} .card .media .arrow.right{right:10px;}
+
+  .card .body{flex:1; padding:18px 20px; display:flex; flex-direction:column;}
+  .card .toprow{display:flex;justify-content:space-between;gap:14px;}
+  .card .name{font-family:var(--font-display); font-size:19px; font-weight:600; color:var(--teal-dark); margin:0 0 4px;}
+  .card .locline{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-soft);margin-bottom:8px;}
+  .card .locline .stars{color:var(--gold);letter-spacing:1px;}
+  .card .rating-block{display:flex;align-items:center;gap:9px; text-align:right; flex:none;}
+  .rating-score{
+    background:var(--teal); color:#fff; font-weight:800; font-family:var(--font-mono); font-size:14px;
+    padding:6px 8px; border-radius:8px; line-height:1;
+  }
+  .rating-text{font-size:12.5px;}
+  .rating-text b{display:block;font-weight:700;color:var(--ink);}
+  .rating-text span{color:var(--ink-soft);}
+
+  .badge-row{display:flex;flex-wrap:wrap;gap:7px;margin:2px 0 10px;}
+  .tag{
+    font-size:11.5px; font-weight:700; padding:4px 10px; border-radius:999px;
+  }
+  .tag.style{background:var(--coral-tint); color:var(--coral-dark);}
+  .tag.amenities{color:var(--ink-soft); display:flex; align-items:center; gap:5px; font-weight:600;}
+  .amen-icons{display:flex;gap:9px;color:var(--ink-soft);margin-bottom:10px;}
+  .amen-icons span{display:flex;align-items:center;gap:4px;font-size:12px;font-weight:600;}
+
+  .room-line{font-size:13.5px;color:var(--ink);margin-bottom:2px;}
+  .room-line b{font-weight:700;}
+
+  .card .bottomrow{
+    margin-top:auto; display:flex; align-items:flex-end; justify-content:space-between; padding-top:14px;
+    border-top:1px dashed var(--line); gap:12px; flex-wrap:wrap;
+  }
+  .card .messages{font-size:12.5px;}
+  .card .cancel{color:var(--success);font-weight:700;margin-bottom:3px;}
+  .card .urgent{color:var(--warn);font-weight:700;}
+  .card .price-block{text-align:right;}
+  .price-old{font-size:13px;color:var(--ink-soft);text-decoration:line-through;font-family:var(--font-mono);}
+  .price-off{font-size:11px;font-weight:700;color:var(--coral-dark);background:var(--coral-tint);padding:2px 7px;border-radius:6px;margin-left:6px;}
+  .price-now{font-family:var(--font-mono);font-size:24px;font-weight:700;color:var(--teal-dark);}
+  .price-now sup{font-size:13px;font-weight:600;color:var(--ink-soft);}
+  .price-total{font-size:12px;color:var(--ink-soft);margin-bottom:8px;}
+  .book-btn{
+    background:var(--teal); color:#fff; border:none; border-radius:10px; padding:11px 22px;
+    font-size:14px; font-weight:700; display:inline-flex; align-items:center; gap:8px;
+  }
+  .book-btn:hover{background:var(--teal-dark);}
+  .details-link{font-size:12.5px;font-weight:700;color:var(--teal-dark); margin-top:8px; display:inline-block;}
+
+  /* Pagination */
+  .pagination{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:34px;}
+  .pagination button{
+    width:36px;height:36px;border-radius:9px;border:1px solid var(--line);background:var(--paper);font-size:13.5px;font-weight:700;
+  }
+  .pagination button.active{background:var(--teal);color:#fff;border-color:var(--teal);}
+  .pagination .arrow-btn{width:auto;padding:0 12px;}
+  .load-more-wrap{text-align:center;margin-top:18px;}
+  .load-more{
+    border:1px solid var(--teal); color:var(--teal-dark); background:var(--paper); border-radius:10px;
+    padding:12px 26px; font-weight:700; font-size:14px;
+  }
+  .load-more:hover{background:var(--teal-tint);}
+
+  /* Trust section */
+  .trust{background:var(--teal-dark); color:#fff; padding:44px 0;}
+  .trust-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:28px;}
+  .trust-badges{display:flex;flex-wrap:wrap;gap:30px;}
+  .trust-badge{display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:600;color:#DCEAE8;}
+  .trust-badge svg{color:var(--gold);flex:none;}
+  .trust-count{font-family:var(--font-display);font-size:16px;font-weight:600;color:#fff;}
+  .pay-logos{display:flex;gap:10px;align-items:center;}
+  .pay-pill{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);border-radius:7px;padding:6px 11px;font-size:11.5px;font-weight:700;color:#DCEAE8;}
+
+  /* Recently viewed */
+  .recent{padding:44px 0;}
+  .recent h3{font-family:var(--font-display);font-size:22px;font-weight:600;color:var(--teal-dark);margin:0 0 16px;}
+  .recent-row{display:flex;gap:16px;overflow-x:auto;padding-bottom:8px;}
+  .mini-card{
+    flex:none;width:220px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--paper);
+  }
+  .mini-card .mimg{height:120px;background-size:cover;background-position:center;}
+  .mini-card .mbody{padding:12px 14px;}
+  .mini-card .mname{font-weight:700;font-size:13.5px;margin-bottom:3px;}
+  .mini-card .mmeta{font-size:12px;color:var(--ink-soft);margin-bottom:8px;}
+  .mini-card .mprice{font-family:var(--font-mono);font-weight:700;color:var(--teal-dark);}
+
+  /* Oran hotel directory */
+  .hotel-directory{margin:30px 0 4px;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:24px;}
+  .hotel-directory h3{font-family:var(--font-display);color:var(--teal-dark);font-size:22px;margin:0 0 6px;}
+  .hotel-directory p{font-size:13px;color:var(--ink-soft);line-height:1.55;margin:0 0 18px;}
+  .directory-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+  .directory-item{display:flex;align-items:center;gap:9px;padding:10px 11px;background:var(--sand);border-radius:8px;font-size:13px;font-weight:600;}
+  .directory-item:before{content:'⌂';color:var(--coral);font-size:16px;}
+  .directory-note{margin-top:17px !important;font-size:11.5px !important;}
+  .cards.grid-view{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));}
+  .cards.grid-view .card{flex-direction:column;}
+  .cards.grid-view .card .media{width:100%;min-height:190px;}
+  .site-toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);z-index:500;background:var(--teal-dark);color:#fff;padding:12px 16px;border-radius:10px;box-shadow:var(--shadow-lg);font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:.2s;max-width:calc(100vw - 32px);text-align:center;}
+  .site-toast.show{opacity:1;transform:translate(-50%,0);}
+
+  /* Footer */
+  footer{background:var(--sand-deep); padding:50px 0 26px; border-top:1px solid var(--line);}
+  .foot-cols{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;margin-bottom:36px;}
+  .foot-cols h5{font-size:12.5px;text-transform:uppercase;letter-spacing:0.07em;color:var(--ink-soft);margin:0 0 14px;}
+  .foot-cols a{display:block;font-size:13.5px;color:var(--ink);margin-bottom:10px;font-weight:500;}
+  .foot-cols a:hover{color:var(--coral-dark);}
+  .foot-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;border-top:1px solid var(--line);padding-top:22px;font-size:12.5px;color:var(--ink-soft);}
+  .foot-selects{display:flex;gap:12px;}
+  .foot-selects span{border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-weight:600;}
+
+  /* Modal */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(10,20,22,0.55);display:none;align-items:flex-start;justify-content:center;
+    z-index:200; padding:40px 20px; overflow-y:auto;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:#fff;border-radius:18px;max-width:920px;width:100%;overflow:hidden;box-shadow:var(--shadow-lg);
+    position:relative; margin-bottom:40px;
+  }
+  .modal-close{
+    position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;background:rgba(19,42,46,0.7);
+    color:#fff;border:none;display:flex;align-items:center;justify-content:center;z-index:5;
+  }
+  .gallery{display:grid;grid-template-columns:1.6fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:4px;height:340px;position:relative;}
+  .gallery > div{background-size:cover;background-position:center;}
+  .gallery .g1{grid-row:1/3;}
+  .gallery-more{
+    position:absolute;bottom:16px;right:16px;background:rgba(19,42,46,0.8);color:#fff;font-size:12.5px;font-weight:700;
+    padding:8px 14px;border-radius:9px;
+  }
+  .modal-body{padding:28px 30px 100px;}
+  .modal-head h2{font-family:var(--font-display);font-size:26px;font-weight:600;color:var(--teal-dark);margin:0 0 6px;}
+  .modal-head .addr{font-size:13.5px;color:var(--ink-soft);display:flex;align-items:center;gap:6px;margin-bottom:16px;}
+  .rating-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:24px;}
+  .rating-item{background:var(--sand);border-radius:10px;padding:12px;text-align:center;}
+  .rating-item .num{font-family:var(--font-mono);font-weight:700;font-size:18px;color:var(--teal-dark);}
+  .rating-item .lbl{font-size:11.5px;color:var(--ink-soft);margin-top:2px;}
+  .modal-section{margin-bottom:26px;}
+  .modal-section h4{font-family:var(--font-display);font-size:17px;font-weight:600;margin:0 0 10px;color:var(--teal-dark);}
+  .modal-section p{font-size:14px;line-height:1.65;color:var(--ink-soft);margin:0 0 10px;}
+  .room-table{width:100%;border-collapse:collapse;}
+  .room-table td{padding:12px 8px;border-top:1px solid var(--line);font-size:13.5px;vertical-align:middle;}
+  .room-table .rimg{width:64px;height:48px;border-radius:8px;background-size:cover;background-position:center;}
+  .room-table .pop{font-size:10.5px;font-weight:700;color:var(--coral-dark);background:var(--coral-tint);padding:2px 7px;border-radius:6px;margin-left:6px;}
+  .room-table .rp{font-family:var(--font-mono);font-weight:700;color:var(--teal-dark);white-space:nowrap;}
+  .room-table .rsel{background:var(--teal);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-weight:700;font-size:12.5px;white-space:nowrap;}
+  .amen-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 20px;}
+  .amen-grid span{font-size:13.5px;display:flex;align-items:center;gap:8px;color:var(--ink);}
+  .attractions div{display:flex;justify-content:space-between;font-size:13.5px;padding:8px 0;border-top:1px solid var(--line);}
+  .attractions div:first-child{border-top:none;}
+  .rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13.5px;}
+  .rules-grid div{background:var(--sand);border-radius:9px;padding:10px 12px;}
+  .review{background:var(--sand);border-radius:12px;padding:14px 16px;margin-bottom:12px;}
+  .review .rhead{display:flex;justify-content:space-between;margin-bottom:6px;font-size:13px;font-weight:700;}
+  .review p{margin:0 0 8px;font-size:13.5px;color:var(--ink);}
+  .review .resp{font-size:12.5px;color:var(--ink-soft);border-left:2px solid var(--teal);padding-left:10px;}
+  .modal-sticky{
+    position:absolute; bottom:0; left:0; right:0; background:#fff; border-top:1px solid var(--line);
+    padding:16px 30px; display:flex; align-items:center; justify-content:space-between; gap:16px;
+  }
+  .modal-sticky .msleft{font-size:13px;color:var(--ink-soft);}
+  .modal-sticky .msleft b{display:block;color:var(--teal-dark);font-size:16px;font-family:var(--font-mono);}
+  .reserve-btn{background:var(--coral);color:#fff;border:none;border-radius:10px;padding:13px 26px;font-weight:700;font-size:14.5px;}
+  .reserve-btn:hover{background:var(--coral-dark);}
+
+  /* Account sign in */
+  .sign-in-trigger{border:0;background:transparent;cursor:pointer;}
+  .login-overlay{align-items:center;padding:20px;}
+  .login-panel{max-width:460px;overflow:visible;}
+  .login-visual{
+    background:linear-gradient(135deg,var(--teal-dark),var(--teal));color:#fff;padding:30px 32px 26px;
+    border-radius:18px 18px 0 0;position:relative;overflow:hidden;
+  }
+  .login-visual:after{content:'';position:absolute;width:190px;height:190px;border:1px solid rgba(255,255,255,.2);border-radius:50%;right:-60px;top:-78px;}
+  .login-brand{position:relative;z-index:1;display:flex;align-items:center;gap:9px;font-family:var(--font-display);font-size:21px;font-weight:600;}
+  .login-visual p{position:relative;z-index:1;margin:22px 0 0;font-size:14px;line-height:1.5;color:rgba(255,255,255,.78);}
+  .login-form{padding:28px 32px 32px;}
+  .login-form h2{font-family:var(--font-display);font-size:26px;color:var(--teal-dark);margin:0 0 6px;}
+  .login-form .intro{font-size:13.5px;color:var(--ink-soft);margin:0 0 22px;line-height:1.5;}
+  .login-field{margin-bottom:16px;}
+  .login-field label{display:block;margin-bottom:7px;font-size:13px;font-weight:700;color:var(--ink);}
+  .login-field input{width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:9px;font-size:14px;color:var(--ink);}
+  .login-field input:focus{border-color:var(--teal);outline:none;box-shadow:0 0 0 3px var(--teal-tint);}
+  .password-row{display:flex;gap:8px;}
+  .password-row input{min-width:0;}
+  .generate-password{flex:none;background:var(--teal-tint);border:1px solid #c9dddd;color:var(--teal-dark);border-radius:9px;padding:0 11px;font-size:12px;font-weight:700;}
+  .generate-password:hover{background:#d5e7e5;}
+  .password-help{font-size:11.5px;color:var(--ink-soft);margin:7px 0 0;line-height:1.4;}
+  .login-submit{width:100%;margin-top:8px;background:var(--coral);border:0;color:#fff;border-radius:10px;padding:13px;font-size:14px;font-weight:700;}
+  .login-submit:hover{background:var(--coral-dark);}
+  .login-message{display:none;margin:14px 0 0;padding:10px 12px;background:var(--success-tint);color:var(--success);border-radius:8px;font-size:12.5px;font-weight:600;}
+  .login-message.show{display:block;}
+
+  /* Mobile bottom sheet + sticky bar */
+  .mobile-filter-btn, .sticky-mobile-bar{display:none;}
+
+  @media (max-width: 980px){
+    .wrap{padding:0 18px;}
+    .nav-links{display:none;}
+    .search-fields{grid-template-columns:1fr; }
+    .field{border-right:none;border-bottom:1px solid var(--line);}
+    .search-btn{border-radius:12px;padding:14px;justify-content:center;margin-top:10px;}
+    .hero h1{font-size:29px;}
+    .main{grid-template-columns:1fr;}
+    .filters{display:none;}
+    .filters.sheet-open{
+      display:block; position:fixed; inset:auto 0 0 0; top:8%; z-index:150; border-radius:20px 20px 0 0;
+      max-height:92vh;
+    }
+    .mobile-filter-btn{
+      display:flex; align-items:center; gap:8px; background:var(--paper); border:1px solid var(--line);
+      border-radius:10px; padding:10px 16px; font-weight:700; font-size:13.5px; margin-bottom:14px;
+    }
+    .sheet-backdrop{display:none;position:fixed;inset:0;background:rgba(10,20,22,0.5);z-index:140;}
+    .sheet-backdrop.on{display:block;}
+    .card{flex-direction:column;}
+    .card .media{width:100%;min-height:190px;}
+    .sortbar .right{width:100%;justify-content:space-between;}
+    .trust-inner{flex-direction:column;align-items:flex-start;}
+    .foot-cols{grid-template-columns:1fr 1fr;}
+    .gallery{grid-template-columns:1fr 1fr;height:220px;}
+    .rating-grid{grid-template-columns:repeat(3,1fr);}
+    .amen-grid{grid-template-columns:1fr 1fr;}
+    .rules-grid{grid-template-columns:1fr;}
+    .directory-grid{grid-template-columns:1fr 1fr;}
+    body{padding-bottom:64px;}
+    .login-form,.login-visual{padding-left:22px;padding-right:22px;}
+    .sticky-mobile-bar{
+      display:flex; position:fixed; bottom:0; left:0; right:0; background:#fff; border-top:1px solid var(--line);
+      padding:12px 18px; z-index:80; align-items:center; justify-content:space-between;
+    }
+  }
+  @media (max-width: 560px){
+    .hotel-directory{padding:18px;}
+    .directory-grid{grid-template-columns:1fr;}
+    .cards.grid-view{grid-template-columns:1fr;}
+  }
+  /* Keep cards readable when the results column is narrow at any screen size. */
+  @container (max-width: 620px){
+    .card{flex-direction:column;}
+    .card .media{width:100%;min-height:210px;}
+    .card .body{padding:16px;}
+    .card .toprow,.card .bottomrow{flex-direction:column;align-items:flex-start;}
+    .card .rating-block{text-align:left;}
+    .price-block{width:100%;align-items:flex-start;}
+    .price-block .book-btn{width:100%;justify-content:center;}
+    .sortbar{align-items:flex-start;}
+    .sortbar .right{width:100%;justify-content:space-between;}
+    .directory-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="wrap nav-inner">
+    <a class="logo" href="#">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M3 21V10.5L12 4l9 6.5V21" stroke="#0F5C63" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 21v-7h6v7" stroke="#E1603E" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      Oran Hotels
+    </a>
+
+    <div class="compact-search">
+      <span>Oran, Algeria</span><div class="sep"></div>
+      <span>Sep 12–19</span><div class="sep"></div>
+      <span>2 Guests</span>
+      <button aria-label="Search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#fff" stroke-width="2.2"/><path d="M21 21l-4.3-4.3" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <div class="nav-links">
+      <a href="#" class="active">Hotels</a>
+      <a href="#">Vacation Rentals</a>
+      <a href="#">Experiences</a>
+      <a href="#">Deals</a>
+    </div>
+    <div class="nav-right">
+      <button class="icon-btn">DZD ▾</button>
+      <a class="list-property" href="#">List Your Property</a>
+      <div class="divider"></div>
+      <button class="icon-btn" aria-label="Saved">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7.5-4.6-10-9.3C.4 8 2 4.5 5.6 4c2-.3 3.9.6 5 2.3C11.7 4.6 13.6 3.7 15.6 4c3.6.5 5.2 4 3.6 7.7C16.5 16.4 12 21 12 21z" stroke="#4B6469" stroke-width="1.6"/></svg>
+      </button>
+      <button class="icon-btn sign-in-trigger" id="openLogin" type="button" aria-haspopup="dialog">
+        <div class="avatar">A</div><span>Sign In</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO / SEARCH -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-eyebrow"><span class="dot"></span> LA RADIEUSE · MEDITERRANEAN COAST</div>
+    <h1>Find your stay in Oran</h1>
+    <p class="sub">From sea-view rooms on the Front de Mer to riads tucked into Sidi El Houari — compare and book verified stays across Wahran.</p>
+
+    <div class="search-card">
+      <div class="search-fields">
+        <div class="field" id="fDest">
+          <label>📍 Destination</label>
+          <button class="val" type="button" aria-expanded="false">Oran, Algeria<small>Wilaya d'Oran</small></button>
+          <div class="autocomplete">
+            <div class="opt"><b>Oran, Algeria</b><span>— Front de Mer, city centre</span></div>
+            <div class="opt"><b>Aïn El Turck</b><span>— beach resorts, 18 km</span></div>
+            <div class="opt"><b>Mostaganem</b><span>— coastal town, 78 km</span></div>
+            <div class="opt"><b>Sidi Bel Abbès</b><span>— inland city, 84 km</span></div>
+          </div>
+        </div>
+        <div class="field">
+          <label>📅 Check-in</label>
+          <input id="checkIn" type="date" value="2026-09-12" aria-label="Check-in date">
+        </div>
+        <div class="field">
+          <label>📅 Check-out</label>
+          <input id="checkOut" type="date" value="2026-09-19" aria-label="Check-out date">
+        </div>
+        <div class="field">
+          <label>👥 Guests</label>
+          <select id="guests" aria-label="Guests"><option value="1">1 Adult</option><option value="2" selected>2 Adults</option><option value="3">3 Adults</option><option value="4">4 Adults</option><option value="5">5+ Guests</option></select>
+        </div>
+        <div class="field">
+          <label>Rooms</label>
+          <select id="rooms" aria-label="Rooms"><option value="1" selected>1 Room</option><option value="2">2 Rooms</option><option value="3">3 Rooms</option><option value="4">4+ Rooms</option></select>
+        </div>
+        <button class="search-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#fff" stroke-width="2.2"/><path d="M21 21l-4.3-4.3" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg>
+          Search
+        </button>
+      </div>
+      <div class="search-meta">
+        <b id="stayLength">7 nights</b><span class="sep">·</span><b id="resultCountA">65+ hotels</b> found<span class="sep">·</span>Prices include taxes &amp; fees
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="zellige-divider"></div>
+
+<!-- MAIN -->
+<div class="wrap main">
+
+  <!-- FILTERS -->
+  <div class="sheet-backdrop" id="sheetBackdrop"></div>
+  <aside class="filters" id="filters">
+    <div class="filters-head">
+      <h3>Filter results</h3>
+      <a class="clear-link" href="#">Clear all</a>
+    </div>
+
+    <div class="fgroup">
+      <button class="map-toggle-btn" id="mapToggleBtn">
+        <div class="mini-map" aria-hidden="true">
+          <iframe title="Map of Oran" loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=-0.691%2C35.676%2C-0.585%2C35.739&amp;layer=mapnik"></iframe>
+          <div class="map-markers" id="mapMarkers" aria-label="Hotel location markers"></div>
+          <div class="map-hotel-popup" id="mapHotelPopup" role="status"></div>
+        </div>
+        <div class="label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 20l-6-2V4l6 2m0 14l6-2m-6 2V6m6 12l6 2V6l-6-2m0 16V4" stroke="#0A3A40" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          Show map
+        </div>
+      </button>
+    </div>
+
+    <div class="fgroup">
+      <h4>Price per night (DZD)</h4>
+      <div class="range-hist">
+        <div style="height:30%"></div><div style="height:55%"></div><div class="in-range" style="height:80%"></div>
+        <div class="in-range" style="height:100%"></div><div class="in-range" style="height:65%"></div>
+        <div class="in-range" style="height:45%"></div><div style="height:25%"></div><div style="height:15%"></div>
+      </div>
+      <div class="range-slider"><div class="fill"></div><div class="handle h1"></div><div class="handle h2"></div></div>
+      <div class="range-labels"><span>6,000</span><span>85,000</span></div>
+    </div>
+
+    <div class="fgroup">
+      <h4>Star rating</h4>
+      <label class="check-row"><span class="left"><input type="checkbox"><span class="stars-inline">★★★★★</span></span><span class="count">(31)</span></label>
+      <label class="check-row"><span class="left"><input type="checkbox"><span class="stars-inline">★★★★</span></span><span class="count">(64)</span></label>
+      <label class="check-row"><span class="left"><input type="checkbox"><span class="stars-inline">★★★</span></span><span class="count">(52)</span></label>
+      <label class="check-row"><span class="left"><input type="checkbox"><span class="stars-inline">★★</span></span><span class="count">(24)</span></label>
+      <label class="check-row"><span class="left"><input type="checkbox"><span class="stars-inline">★</span></span><span class="count">(9)</span></label>
+    </div>
+
+    <div class="fgroup">
+      <h4>Guest rating</h4>
+      <label class="check-row"><span class="left"><input type="checkbox">9+ Exceptional</span><span class="count">(19)</span></label>
+      <label class="check-row"><span class="left"><input type="checkbox">8+ Excellent</span><span class="count">(47)</span></label>
+      <label class="check-row"><span class="left"><input type="checkbox">7+ Very Good</span><span class="count">(88)</span></label>
+    </div>
+
+    <div class="fgroup">
+      <h4>Property type</h4>
+      <label class="check-row"><span class="left"><input type="checkbox">Hotel</span><span class="count">(112)</span></label>
+      <label class="check-row"><span class="left"><input type="checkbox">Maison d'hôtes</span><span class="count">(26)</span></label>
+      <label class="check-row"><span class="left"><input type="checkbox">Riad / Traditional</span><span class="count">(14)</span></label>
+      <label class="check-row"><span class="left"><input type="checkbox">Apartment</span><span class="count">(21)</span></label>
+      <label class="check-row"><span class="left"><input type="checkbox">Resort</span><span class="count">(14)</span></label>
+    </div>
+
+    <div class="fgroup">
+      <h4>Neighborhood</h4>
+      <label class="check-row"><span class="left"><input type="checkbox" checked>Front de Mer</span><span class="count">(38)</span></label>
+      <label class="check-row"><span class="left"><input type="checkbox">Sidi El Houari</span><span class="count">(24)</span></label>
+      <label class="check-row"><span class="left"><input type="checkbox">Gambetta</span><span class="count">(31)</span></label>
+      <label class="check-row"><span class="left"><input type="checkbox">Canastel</span><span class="count">(19)</span></label>
+      <label class="check-row"><span class="left"><input type="checkbox">Bir El Djir</span><span class="count">(17)</span></label>
+      <label class="check-row"><span class="left"><input type="checkbox">Es Sénia</span><span class="count">(11)</span></label>
+      <a class="see-more" href="#">+3 more</a>
+    </div>
+
+    <div class="fgroup">
+      <h4>Amenities</h4>
+      <div class="amenity-chip-list">
+        <span class="amenity-chip on">Free WiFi</span>
+        <span class="amenity-chip">Breakfast</span>
+        <span class="amenity-chip">Sea view</span>
+        <span class="amenity-chip">Pool</span>
+        <span class="amenity-chip on">Free cancellation</span>
+        <span class="amenity-chip">Airport shuttle</span>
+        <span class="amenity-chip">Hammam</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- RESULTS -->
+  <div class="results">
+    <button class="mobile-filter-btn" id="openSheet">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M7 12h10M10 18h4" stroke="#132A2E" stroke-width="1.8" stroke-linecap="round"/></svg>
+      Filters &amp; sort
+    </button>
+
+    <div class="sortbar">
+      <div class="left">
+        <h2>Hotels in Oran</h2>
+        <span class="count-pill" id="resultCountB">65+ hotels indexed</span>
+      </div>
+      <div class="right">
+        <div class="select-like" id="sortSelect">
+          <span id="sortLabel">Sort: Recommended</span>▾
+          <div class="menu">
+            <div class="sel" data-sort="rec">Recommended</div>
+            <div data-sort="low">Price: Low to High</div>
+            <div data-sort="high">Price: High to Low</div>
+            <div data-sort="rating">Guest rating</div>
+            <div data-sort="dist">Distance to centre</div>
+          </div>
+        </div>
+        <div class="view-toggle">
+          <button class="active" aria-label="List view"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+          <button aria-label="Grid view"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.6"/><rect x="13" y="4" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.6"/><rect x="4" y="13" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.6"/><rect x="13" y="13" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.6"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="chips-row">
+      <div class="chip">Front de Mer <button>✕</button></div>
+      <div class="chip">Free cancellation <button>✕</button></div>
+      <div class="chip">4+ stars <button>✕</button></div>
+    </div>
+
+    <div class="cards" id="cards">
+
+      <!-- CARD 1 -->
+      <article class="card" data-price="61000" data-rating="9.5">
+        <div class="media" style="background-image:url('https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=900&auto=format&fit=crop')">
+          <span class="ad-badge">Ad</span>
+          <button class="heart" aria-label="Save">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7.5-4.6-10-9.3C.4 8 2 4.5 5.6 4c2-.3 3.9.6 5 2.3C11.7 4.6 13.6 3.7 15.6 4c3.6.5 5.2 4 3.6 7.7C16.5 16.4 12 21 12 21z" stroke="#E1603E" stroke-width="1.6"/></svg>
+          </button>
+          <button class="arrow left">‹</button><button class="arrow right">›</button>
+          <div class="dots"><span class="on"></span><span></span><span></span><span></span></div>
+        </div>
+        <div class="body">
+          <div class="toprow">
+            <div>
+              <h3 class="name">Le Panorama Oran</h3>
+              <div class="locline"><span class="stars">★★★★★</span> · Front de Mer</div>
+            </div>
+            <div class="rating-block">
+              <div class="rating-text"><b>Exceptional</b><span>1,412 reviews</span></div>
+              <div class="rating-score">9.5</div>
+            </div>
+          </div>
+          <div class="badge-row">
+            <span class="tag style">Sea-view rooftop pool</span>
+          </div>
+          <div class="amen-icons">
+            <span>📶 WiFi</span><span>🏊 Pool</span><span>🏋 Gym</span><span>🧖 Spa</span><span>🍽 Restaurant</span>
+          </div>
+          <div class="room-line"><b>Deluxe King — Sea View</b> · 42m²</div>
+          <div class="bottomrow">
+            <div class="messages">
+              <div class="cancel">Free cancellation until Sep 5</div>
+              <div class="urgent">Only 2 rooms left!</div>
+              <a class="details-link" data-modal="hotel1" href="#">View details →</a>
+            </div>
+            <div class="price-block">
+              <div><span class="price-old">86,000</span><span class="price-off">−29%</span></div>
+              <div class="price-now">61,000 <sup>DZD/night</sup></div>
+              <div class="price-total">427,000 DZD total for 7 nights</div>
+              <button class="book-btn">Book now <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- CARD 2 -->
+      <article class="card" data-price="24500" data-rating="9.1">
+        <div class="media" style="background-image:url('https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=900&auto=format&fit=crop')">
+          <button class="heart" aria-label="Save">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7.5-4.6-10-9.3C.4 8 2 4.5 5.6 4c2-.3 3.9.6 5 2.3C11.7 4.6 13.6 3.7 15.6 4c3.6.5 5.2 4 3.6 7.7C16.5 16.4 12 21 12 21z" stroke="#E1603E" stroke-width="1.6"/></svg>
+          </button>
+          <button class="arrow left">‹</button><button class="arrow right">›</button>
+          <div class="dots"><span class="on"></span><span></span><span></span></div>
+        </div>
+        <div class="body">
+          <div class="toprow">
+            <div>
+              <h3 class="name">Hôtel Ibn Khaldoun</h3>
+              <div class="locline"><span class="stars">★★★★</span> · Gambetta, city centre</div>
+            </div>
+            <div class="rating-block">
+              <div class="rating-text"><b>Excellent</b><span>876 reviews</span></div>
+              <div class="rating-score">9.1</div>
+            </div>
+          </div>
+          <div class="badge-row"><span class="tag style">Business-friendly</span></div>
+          <div class="amen-icons"><span>📶 WiFi</span><span>🍽 Restaurant</span><span>🧺 Laundry</span></div>
+          <div class="room-line"><b>Classic Double</b> · 26m²</div>
+          <div class="bottomrow">
+            <div class="messages">
+              <div class="cancel">Free cancellation until Sep 8</div>
+              <a class="details-link" data-modal="hotel1" href="#">View details →</a>
+            </div>
+            <div class="price-block">
+              <div class="price-now">24,500 <sup>DZD/night</sup></div>
+              <div class="price-total">171,500 DZD total</div>
+              <button class="book-btn">Book now <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- CARD 3 -->
+      <article class="card" data-price="72000" data-rating="9.6">
+        <div class="media" style="background-image:url('https://images.unsplash.com/photo-1615880484746-a134be9a6ecf?q=80&w=900&auto=format&fit=crop')">
+          <button class="heart" aria-label="Save">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7.5-4.6-10-9.3C.4 8 2 4.5 5.6 4c2-.3 3.9.6 5 2.3C11.7 4.6 13.6 3.7 15.6 4c3.6.5 5.2 4 3.6 7.7C16.5 16.4 12 21 12 21z" stroke="#E1603E" stroke-width="1.6"/></svg>
+          </button>
+          <button class="arrow left">‹</button><button class="arrow right">›</button>
+          <div class="dots"><span class="on"></span><span></span><span></span><span></span></div>
+        </div>
+        <div class="body">
+          <div class="toprow">
+            <div>
+              <h3 class="name">Dar El Bahia</h3>
+              <div class="locline"><span class="stars">★★★★★</span> · Sidi El Houari</div>
+            </div>
+            <div class="rating-block">
+              <div class="rating-text"><b>Exceptional</b><span>329 reviews</span></div>
+              <div class="rating-score">9.6</div>
+            </div>
+          </div>
+          <div class="badge-row"><span class="tag style">Restored Ottoman-era house</span></div>
+          <div class="amen-icons"><span>📶 WiFi</span><span>🛁 Hammam</span><span>🌿 Courtyard</span><span>🍽 Restaurant</span></div>
+          <div class="room-line"><b>Suite Casbah — Courtyard View</b> · 50m²</div>
+          <div class="bottomrow">
+            <div class="messages">
+              <div class="cancel">Includes breakfast &amp; hammam access</div>
+              <a class="details-link" data-modal="hotel1" href="#">View details →</a>
+            </div>
+            <div class="price-block">
+              <div><span class="price-old">94,000</span><span class="price-off">−23%</span></div>
+              <div class="price-now">72,000 <sup>DZD/night</sup></div>
+              <div class="price-total">504,000 DZD total</div>
+              <button class="book-btn">Book now <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- CARD 4 -->
+      <article class="card" data-price="7200" data-rating="8.2">
+        <div class="media" style="background-image:url('https://images.unsplash.com/photo-1522798514-97ceb8c4f1c8?q=80&w=900&auto=format&fit=crop')">
+          <button class="heart" aria-label="Save">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7.5-4.6-10-9.3C.4 8 2 4.5 5.6 4c2-.3 3.9.6 5 2.3C11.7 4.6 13.6 3.7 15.6 4c3.6.5 5.2 4 3.6 7.7C16.5 16.4 12 21 12 21z" stroke="#E1603E" stroke-width="1.6"/></svg>
+          </button>
+          <div class="dots"><span class="on"></span><span></span></div>
+        </div>
+        <div class="body">
+          <div class="toprow">
+            <div>
+              <h3 class="name">Auberge Santa Cruz</h3>
+              <div class="locline"><span class="stars">★★★</span> · Below Fort Santa Cruz</div>
+            </div>
+            <div class="rating-block">
+              <div class="rating-text"><b>Very Good</b><span>2,105 reviews</span></div>
+              <div class="rating-score">8.2</div>
+            </div>
+          </div>
+          <div class="badge-row"><span class="tag style">Budget pick</span></div>
+          <div class="amen-icons"><span>📶 WiFi</span><span>🧺 Laundry</span><span>🛋 Lounge</span></div>
+          <div class="room-line"><b>Shared Room — Terrace</b></div>
+          <div class="bottomrow">
+            <div class="messages"><div class="cancel">Pay at property</div></div>
+            <div class="price-block">
+              <div class="price-now">7,200 <sup>DZD/night</sup></div>
+              <div class="price-total">50,400 DZD total</div>
+              <button class="book-btn">Book now <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- CARD 5 -->
+      <article class="card" data-price="49000" data-rating="8.9">
+        <div class="media" style="background-image:url('https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?q=80&w=900&auto=format&fit=crop')">
+          <button class="heart" aria-label="Save">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7.5-4.6-10-9.3C.4 8 2 4.5 5.6 4c2-.3 3.9.6 5 2.3C11.7 4.6 13.6 3.7 15.6 4c3.6.5 5.2 4 3.6 7.7C16.5 16.4 12 21 12 21z" stroke="#E1603E" stroke-width="1.6"/></svg>
+          </button>
+          <div class="dots"><span class="on"></span><span></span><span></span></div>
+        </div>
+        <div class="body">
+          <div class="toprow">
+            <div>
+              <h3 class="name">Corniche Bay Resort &amp; Spa</h3>
+              <div class="locline"><span class="stars">★★★★★</span> · Canastel</div>
+            </div>
+            <div class="rating-block">
+              <div class="rating-text"><b>Excellent</b><span>691 reviews</span></div>
+              <div class="rating-score">8.9</div>
+            </div>
+          </div>
+          <div class="badge-row"><span class="tag style">Private beach access</span></div>
+          <div class="amen-icons"><span>📶 WiFi</span><span>🏖 Beach</span><span>🏊 Pool</span><span>🧖 Spa</span></div>
+          <div class="room-line"><b>Family Bungalow — Garden</b> · 60m²</div>
+          <div class="bottomrow">
+            <div class="messages"><div class="cancel">Free cancellation until Sep 6</div></div>
+            <div class="price-block">
+              <div class="price-now">49,000 <sup>DZD/night</sup></div>
+              <div class="price-total">343,000 DZD total</div>
+              <button class="book-btn">Book now <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <section class="hotel-directory" aria-labelledby="directoryTitle">
+      <h3 id="directoryTitle">More hotels across Oran</h3>
+      <p>Browse additional properties from Oran, Bir El Djir, Es Sénia, Ain El Turck, Bousfer and the coast.</p>
+      <div class="directory-grid">
+        <div class="directory-item">Four Points by Sheraton Oran</div>
+        <div class="directory-item">AZ Hotels Grand Oran</div>
+        <div class="directory-item">Grand Hôtel Oran</div>
+        <div class="directory-item">Hotel Oran Bay</div>
+        <div class="directory-item">Royal Hotel Oran</div>
+        <div class="directory-item">Timgad Hotel</div>
+        <div class="directory-item">Bel Air Hotel</div>
+        <div class="directory-item">Continental Hotel</div>
+        <div class="directory-item">Windsor Hotel</div>
+        <div class="directory-item">St Rock Hotel</div>
+        <div class="directory-item">Roufi Hotel</div>
+        <div class="directory-item">Hôtel Président</div>
+        <div class="directory-item">Karim Loisir</div>
+        <div class="directory-item">Ikram Hotel</div>
+        <div class="directory-item">L'Horloge</div>
+        <div class="directory-item">Khalid Hotel</div>
+        <div class="directory-item">Lala Mokhtara</div>
+        <div class="directory-item">Jasmine Hotel</div>
+        <div class="directory-item">08 Mai 1945 Hotel</div>
+        <div class="directory-item">El Andalous Hotel</div>
+        <div class="directory-item">Le Raja Hotel</div>
+        <div class="directory-item">Mira Hotel</div>
+        <div class="directory-item">Prévillège Hotel</div>
+        <div class="directory-item">Joyau Bleu Hotel</div>
+        <div class="directory-item">Viva l'Algérie Hotel</div>
+        <div class="directory-item">Zatir Hotel</div>
+        <div class="directory-item">Montparnasse Hotel</div>
+        <div class="directory-item">Obeid Hotel</div>
+        <div class="directory-item">Petit Chez Soit</div>
+        <div class="directory-item">Miamid Beach</div>
+        <div class="directory-item">El Azhar Hotel</div>
+        <div class="directory-item">Majestic Hotel</div>
+        <div class="directory-item">Turk Hotel</div>
+        <div class="directory-item">Kamel Hotel</div>
+        <div class="directory-item">Chahrazed Hotel</div>
+        <div class="directory-item">El Rayen Hotel</div>
+        <div class="directory-item">Maraval Hotel</div>
+        <div class="directory-item">Azzouar Hotel</div>
+        <div class="directory-item">Les Andalouses</div>
+        <div class="directory-item">Littoral Hotel</div>
+        <div class="directory-item">Lilou Palace</div>
+        <div class="directory-item">Chanez Dream</div>
+        <div class="directory-item">Dairi Hotel</div>
+        <div class="directory-item">Les Castors</div>
+        <div class="directory-item">El Wafa Hotel</div>
+        <div class="directory-item">El Manara Hotel</div>
+        <div class="directory-item">El Badr Hotel</div>
+        <div class="directory-item">Tassili Hotel</div>
+        <div class="directory-item">Djawhara Hotel</div>
+        <div class="directory-item">Cap Marina Hotel</div>
+        <div class="directory-item">La Brise Hotel</div>
+        <div class="directory-item">La Playa Hotel</div>
+        <div class="directory-item">Les Dunes d'Or</div>
+        <div class="directory-item">Panorama Hotel</div>
+        <div class="directory-item">The Adresse</div>
+        <div class="directory-item">Astoria Hotel</div>
+        <div class="directory-item">Madina Hotel</div>
+        <div class="directory-item">Moderne Hotel</div>
+        <div class="directory-item">Sidi Lahouari Hotel</div>
+        <div class="directory-item">Les Jardins Hotel</div>
+        <div class="directory-item">Carthage Hotel</div>
+        <div class="directory-item">Afrique Hotel</div>
+      </div>
+      <p class="directory-note">Directory names are based on the Oran tourism administration’s accommodation list. Availability, prices and contact details should be confirmed with each property before booking.</p>
+    </section>
+
+    <div class="pagination" id="pagination">
+      <button class="arrow-btn" type="button" data-page-action="prev">‹ Prev</button>
+      <button class="active" type="button" data-page="1">1</button><button type="button" data-page="2">2</button><button type="button" data-page="3">3</button><button type="button" data-page="4">4</button><span>…</span><button type="button" data-page="10">10</button>
+      <button class="arrow-btn" type="button" data-page-action="next">Next ›</button>
+    </div>
+    <div class="load-more-wrap"><button class="load-more">Load more stays</button></div>
+  </div>
+</div>
+
+<!-- TRUST -->
+<section class="trust">
+  <div class="wrap trust-inner">
+    <div class="trust-badges">
+      <div class="trust-badge"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 2l8 3v6c0 5-3.5 8.5-8 11-4.5-2.5-8-6-8-11V5l8-3z" stroke="#C99A3E" stroke-width="1.6"/></svg>Price match guarantee</div>
+      <div class="trust-badge"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="#C99A3E" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="#C99A3E" stroke-width="1.6"/></svg>Verified reviews</div>
+      <div class="trust-badge"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="5" y="10" width="14" height="10" rx="2" stroke="#C99A3E" stroke-width="1.6"/><path d="M8 10V7a4 4 0 018 0v3" stroke="#C99A3E" stroke-width="1.6"/></svg>Secure booking</div>
+      <div class="trust-badge"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M4 14v-2a8 8 0 0116 0v2M4 14a2 2 0 002 2h1v-5H6a2 2 0 00-2 2zm16 0a2 2 0 01-2 2h-1v-5h1a2 2 0 012 2z" stroke="#C99A3E" stroke-width="1.6"/></svg>24/7 support</div>
+    </div>
+    <div>
+      <div class="trust-count">2.3M+ bookings made across Algeria</div>
+      <div class="pay-logos" style="margin-top:10px;">
+        <span class="pay-pill">VISA</span><span class="pay-pill">Mastercard</span><span class="pay-pill">Amex</span><span class="pay-pill">Edahabia</span><span class="pay-pill">Apple Pay</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RECENTLY VIEWED -->
+<section class="recent">
+  <div class="wrap">
+    <h3>Your recently viewed hotels</h3>
+    <div class="recent-row">
+      <a class="mini-card" href="#">
+        <div class="mimg" style="background-image:url('https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=400&auto=format&fit=crop')"></div>
+        <div class="mbody"><div class="mname">Le Panorama Oran</div><div class="mmeta">★★★★★ 9.5</div><div class="mprice">61,000 DZD</div></div>
+      </a>
+      <a class="mini-card" href="#">
+        <div class="mimg" style="background-image:url('https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=400&auto=format&fit=crop')"></div>
+        <div class="mbody"><div class="mname">Hôtel Ibn Khaldoun</div><div class="mmeta">★★★★ 9.1</div><div class="mprice">24,500 DZD</div></div>
+      </a>
+      <a class="mini-card" href="#">
+        <div class="mimg" style="background-image:url('https://images.unsplash.com/photo-1615880484746-a134be9a6ecf?q=80&w=400&auto=format&fit=crop')"></div>
+        <div class="mbody"><div class="mname">Dar El Bahia</div><div class="mmeta">★★★★★ 9.6</div><div class="mprice">72,000 DZD</div></div>
+      </a>
+      <a class="mini-card" href="#">
+        <div class="mimg" style="background-image:url('https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?q=80&w=400&auto=format&fit=crop')"></div>
+        <div class="mbody"><div class="mname">Corniche Bay Resort</div><div class="mmeta">★★★★★ 8.9</div><div class="mprice">49,000 DZD</div></div>
+      </a>
+      <a class="mini-card" href="#">
+        <div class="mimg" style="background-image:url('https://images.unsplash.com/photo-1522798514-97ceb8c4f1c8?q=80&w=400&auto=format&fit=crop')"></div>
+        <div class="mbody"><div class="mname">Auberge Santa Cruz</div><div class="mmeta">★★★ 8.2</div><div class="mprice">7,200 DZD</div></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-cols">
+      <div>
+        <h5>Popular destinations</h5>
+        <a href="#">Oran</a><a href="#">Algiers</a><a href="#">Constantine</a><a href="#">Annaba</a><a href="#">Tlemcen</a><a href="#">Béjaïa</a>
+      </div>
+      <div>
+        <h5>Property types</h5>
+        <a href="#">Hotels</a><a href="#">Maisons d'hôtes</a><a href="#">Riads</a><a href="#">Resorts</a><a href="#">Apartments</a>
+      </div>
+      <div>
+        <h5>Company</h5>
+        <a href="#">About</a><a href="#">Careers</a><a href="#">Press</a><a href="#">Affiliate program</a><a href="#">Blog</a>
+      </div>
+      <div>
+        <h5>Support</h5>
+        <a href="#">Help centre</a><a href="#">Contact us</a><a href="#">Cancellation policy</a><a href="#">Travel advisories</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 StayFinder Inc.</span>
+      <div class="foot-selects"><span>DZD ▾</span><span>English ▾</span></div>
+    </div>
+  </div>
+</footer>
+
+<!-- STICKY MOBILE BAR -->
+<div class="sticky-mobile-bar">
+  <div><div style="font-size:11px;color:#4B6469;">From</div><div style="font-family:'IBM Plex Mono';font-weight:700;color:#0A3A40;">7,200 DZD</div></div>
+  <button class="book-btn">View deal</button>
+</div>
+
+<!-- SIGN IN MODAL -->
+<div class="modal-overlay login-overlay open" id="loginOverlay" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+  <div class="modal login-panel">
+    <button class="modal-close" id="loginClose" type="button" aria-label="Close sign in">✕</button>
+    <div class="login-visual">
+      <div class="login-brand">
+        <svg width="25" height="25" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 21V10.5L12 4l9 6.5V21" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 21v-7h6v7" stroke="#F5B39F" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        Oran Hotels
+      </div>
+      <p>Save your favorite stays and make booking along the Mediterranean coast simpler.</p>
+    </div>
+    <form class="login-form" id="loginForm">
+      <h2 id="loginTitle">Welcome to Oran Hotels</h2>
+      <p class="intro">Enter your details or create a secure password to explore hotels across Oran.</p>
+      <div class="login-field">
+        <label for="guestName">Your name</label>
+        <input id="guestName" name="name" type="text" autocomplete="name" placeholder="e.g. Amine B." required>
+      </div>
+      <div class="login-field">
+        <label for="guestPassword">Password</label>
+        <div class="password-row">
+          <input id="guestPassword" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" minlength="8" required>
+          <button class="generate-password" id="generatePassword" type="button">Generate</button>
+        </div>
+        <p class="password-help">Need one? Generate a strong 14-character password instantly.</p>
+      </div>
+      <button class="login-submit" type="submit">Continue to Oran Hotels</button>
+      <p class="login-message" id="loginMessage" role="status"></p>
+    </form>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div class="gallery">
+      <div class="g1" style="background-image:url('https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=900&auto=format&fit=crop')"></div>
+      <div style="background-image:url('https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=500&auto=format&fit=crop')"></div>
+      <div style="background-image:url('https://images.unsplash.com/photo-1615880484746-a134be9a6ecf?q=80&w=500&auto=format&fit=crop')"></div>
+      <div style="background-image:url('https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?q=80&w=500&auto=format&fit=crop')"></div>
+      <div style="background-image:url('https://images.unsplash.com/photo-1522798514-97ceb8c4f1c8?q=80&w=500&auto=format&fit=crop')"></div>
+      <div class="gallery-more">View all 32 photos</div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-head">
+        <h2>Le Panorama Oran</h2>
+        <div class="addr">★★★★★ &nbsp;·&nbsp; 📍 Boulevard Front de Mer, Oran 31000 — <a href="#" style="color:var(--teal-dark);font-weight:700;">view on map</a></div>
+      </div>
+
+      <div class="rating-grid">
+        <div class="rating-item"><div class="num">9.7</div><div class="lbl">Cleanliness</div></div>
+        <div class="rating-item"><div class="num">9.8</div><div class="lbl">Location</div></div>
+        <div class="rating-item"><div class="num">9.4</div><div class="lbl">Service</div></div>
+        <div class="rating-item"><div class="num">9.0</div><div class="lbl">Value</div></div>
+        <div class="rating-item"><div class="num">9.2</div><div class="lbl">Facilities</div></div>
+      </div>
+
+      <div class="modal-section">
+        <h4>About this hotel</h4>
+        <p>Perched above the Front de Mer promenade, Le Panorama Oran looks straight out over the Mediterranean toward the Santa Cruz hillside. Rooms are done in warm plaster tones with brass fittings, and the rooftop pool stays open until midnight through the summer season.</p>
+        <p>The hotel sits an easy walk from Place du 1er Novembre and the Grande Poste, with the train station a short taxi ride away — a comfortable base whether you're here for the coastline or the old town.</p>
+      </div>
+
+      <div class="modal-section">
+        <h4>Choose your room</h4>
+        <table class="room-table">
+          <tr>
+            <td><div class="rimg" style="background-image:url('https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=200&auto=format&fit=crop')"></div></td>
+            <td>Standard King<br><span style="color:var(--ink-soft);">28m² · City view · 2 guests</span></td>
+            <td class="rp">42,000 DZD</td>
+            <td><button class="rsel">Select</button></td>
+          </tr>
+          <tr>
+            <td><div class="rimg" style="background-image:url('https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=200&auto=format&fit=crop')"></div></td>
+            <td>Deluxe King — Sea View<span class="pop">Most popular</span><br><span style="color:var(--ink-soft);">42m² · Sea view · 2 guests</span></td>
+            <td class="rp">61,000 DZD</td>
+            <td><button class="rsel">Select</button></td>
+          </tr>
+          <tr>
+            <td><div class="rimg" style="background-image:url('https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=200&auto=format&fit=crop')"></div></td>
+            <td>Panorama Suite<br><span style="color:var(--ink-soft);">70m² · Sea &amp; hillside view · 3 guests</span></td>
+            <td class="rp">98,000 DZD</td>
+            <td><button class="rsel">Select</button></td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="modal-section">
+        <h4>Amenities</h4>
+        <div class="amen-grid">
+          <span>📶 Free WiFi</span><span>🏊 Rooftop pool</span><span>🏋 Gym</span>
+          <span>🧖 Spa &amp; hammam</span><span>🍽 Restaurant</span><span>🚗 Valet parking</span>
+          <span>🛎 24h room service</span><span>❄ Air conditioning</span><span>🚭 Non-smoking rooms</span>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <h4>Getting around</h4>
+        <div class="attractions">
+          <div><span>Place du 1er Novembre</span><span>6 min walk</span></div>
+          <div><span>Fort de Santa Cruz</span><span>14 min by car</span></div>
+          <div><span>Grande Mosquée d'Oran</span><span>9 min walk</span></div>
+          <div><span>Gare d'Oran (train station)</span><span>10 min by car</span></div>
+          <div><span>Ahmed Ben Bella Airport</span><span>25 min by car</span></div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <h4>House rules</h4>
+        <div class="rules-grid">
+          <div>Check-in from <b>3:00 PM</b></div>
+          <div>Check-out by <b>11:00 AM</b></div>
+          <div>No smoking indoors</div>
+          <div>Pets not allowed</div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <h4>Guest reviews</h4>
+        <div class="review">
+          <div class="rhead"><span>Yasmine, Algiers</span><span>9.8</span></div>
+          <p>The rooftop view over the bay at sunset made the whole trip. Staff arranged a taxi to Santa Cruz without us even asking twice.</p>
+          <div class="resp">Hotel response: Thank you Yasmine, we're delighted the rooftop lived up to the view!</div>
+        </div>
+        <div class="review">
+          <div class="rhead"><span>Karim, Constantine</span><span>9.2</span></div>
+          <p>Spotless rooms and a very good breakfast spread. Walking distance to the centre-ville is a big plus for exploring on foot.</p>
+        </div>
+        <a class="details-link" href="#">Read all 1,412 reviews →</a>
+      </div>
+    </div>
+
+    <div class="modal-sticky">
+      <div class="msleft">Deluxe King — Sea View · 7 nights<b>427,000 DZD total</b></div>
+      <button class="reserve-btn">Reserve now</button>
+    </div>
+  </div>
+</div>
+
+<div class="site-toast" id="siteToast" role="status" aria-live="polite"></div>
+
+<script>
+  // Start at the beginning of the page so the hero title is never restored half off-screen.
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.addEventListener('load', () => window.scrollTo(0, 0));
+
+  // nav shrink
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 140);
+  });
+
+  // destination autocomplete toggle
+  const fDest = document.getElementById('fDest');
+  fDest.addEventListener('click', (e) => {
+    fDest.classList.toggle('open');
+    fDest.querySelector('.val').setAttribute('aria-expanded', fDest.classList.contains('open'));
+    e.stopPropagation();
+  });
+  document.addEventListener('click', () => {
+    fDest.classList.remove('open');
+    fDest.querySelector('.val').setAttribute('aria-expanded', 'false');
+  });
+
+  const toast = document.getElementById('siteToast');
+  let toastTimer;
+  const showToast = (message) => {
+    toast.textContent = message;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+  };
+  document.querySelectorAll('.autocomplete .opt').forEach(option => {
+    option.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const destination = option.querySelector('b').textContent;
+      const detail = option.querySelector('span').textContent.replace(/^—\s*/, '');
+      fDest.querySelector('.val').innerHTML = `${destination}<small>${detail}</small>`;
+      fDest.classList.remove('open');
+      fDest.querySelector('.val').setAttribute('aria-expanded', 'false');
+    });
+  });
+  const runSearch = () => {
+    const destination = fDest.querySelector('.val').childNodes[0].textContent.trim();
+    const checkIn = document.getElementById('checkIn').value;
+    const checkOut = document.getElementById('checkOut').value;
+    const nights = Math.round((new Date(`${checkOut}T00:00:00`) - new Date(`${checkIn}T00:00:00`)) / 86400000);
+    if (!checkIn || !checkOut || nights < 1) {
+      showToast('Choose a check-out date after your check-in date.');
+      document.getElementById('checkOut').focus();
+      return;
+    }
+    document.getElementById('stayLength').textContent = `${nights} night${nights === 1 ? '' : 's'}`;
+    document.getElementById('resultCountA').textContent = '65+ hotels';
+    document.getElementById('resultCountB').textContent = `Hotels in ${destination}`;
+    cardsWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    showToast(`Showing ${document.getElementById('guests').value} guest(s), ${document.getElementById('rooms').value} room(s) in ${destination}.`);
+  };
+  document.querySelector('.search-btn').addEventListener('click', runSearch);
+  document.querySelector('.compact-search button').addEventListener('click', runSearch);
+
+  // sort dropdown
+  const sortSelect = document.getElementById('sortSelect');
+  const sortLabel = document.getElementById('sortLabel');
+  sortSelect.addEventListener('click', (e) => { sortSelect.classList.toggle('open'); e.stopPropagation(); });
+  document.addEventListener('click', () => sortSelect.classList.remove('open'));
+
+  const cardsWrap = document.getElementById('cards');
+  sortSelect.querySelectorAll('.menu div').forEach(opt => {
+    opt.addEventListener('click', () => {
+      const mode = opt.dataset.sort;
+      sortLabel.textContent = 'Sort: ' + opt.textContent;
+      sortSelect.querySelectorAll('.menu div').forEach(o => o.classList.remove('sel'));
+      opt.classList.add('sel');
+      const cards = Array.from(cardsWrap.children);
+      if(mode === 'low') cards.sort((a,b) => a.dataset.price - b.dataset.price);
+      else if(mode === 'high') cards.sort((a,b) => b.dataset.price - a.dataset.price);
+      else if(mode === 'rating') cards.sort((a,b) => b.dataset.rating - a.dataset.rating);
+      cards.forEach(c => cardsWrap.appendChild(c));
+    });
+  });
+
+  // hotel result pages — each page shows additional Oran properties with photos
+  const firstPageCards = cardsWrap.innerHTML;
+  const hotelPages = {
+    2: [
+      ['Four Points by Sheraton Oran', 'Route des Falaises · Oran', 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=900&auto=format&fit=crop'],
+      ['AZ Hotels Grand Oran', 'Es Sénia · Oran', 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?q=80&w=900&auto=format&fit=crop'],
+      ['Royal Hotel Oran', 'City centre · Oran', 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?q=80&w=900&auto=format&fit=crop']
+    ],
+    3: [
+      ['Hotel Oran Bay', 'Canastel · Oran', 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=900&auto=format&fit=crop'],
+      ['Timgad Hotel', 'Boulevard Emir Abdelkader · Oran', 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=900&auto=format&fit=crop'],
+      ['Continental Hotel', 'Rue de la Soummam · Oran', 'https://images.unsplash.com/photo-1568084680786-a84f91d1153c?q=80&w=900&auto=format&fit=crop']
+    ],
+    4: [
+      ['Bel Air Hotel', 'City centre · Oran', 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?q=80&w=900&auto=format&fit=crop'],
+      ['El Andalous Hotel', 'Avenue Melah Ali · Oran', 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?q=80&w=900&auto=format&fit=crop'],
+      ['Les Andalouses', 'El Ançor · Oran coast', 'https://images.unsplash.com/photo-1602002418082-a4443e081dd1?q=80&w=900&auto=format&fit=crop']
+    ],
+    10: [
+      ['Cap Marina Hotel', 'Cap Falcon · Ain El Turck', 'https://images.unsplash.com/photo-1540541338287-41700207dee6?q=80&w=900&auto=format&fit=crop'],
+      ['La Playa Hotel', 'Route de Cap Falcon · Ain El Turck', 'https://images.unsplash.com/photo-1561501900-3701fa6a0864?q=80&w=900&auto=format&fit=crop'],
+      ['Les Dunes d’Or', 'Cap Falcon · Ain El Turck', 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=900&auto=format&fit=crop']
+    ]
+  };
+  let activeHotelPage = 1;
+  const makeHotelCard = ([name, location, image]) => `
+    <article class="card" data-price="0" data-rating="0">
+      <div class="media" style="background-image:url('${image}')">
+        <button class="heart" aria-label="Save ${name}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7.5-4.6-10-9.3C.4 8 2 4.5 5.6 4c2-.3 3.9.6 5 2.3C11.7 4.6 13.6 3.7 15.6 4c3.6.5 5.2 4 3.6 7.7C16.5 16.4 12 21 12 21z" stroke="#E1603E" stroke-width="1.6"/></svg></button>
+      </div>
+      <div class="body"><div class="toprow"><div><h3 class="name">${name}</h3><div class="locline">${location}</div></div><div class="rating-block"><div class="rating-text"><b>Oran directory</b><span>Check current availability</span></div></div></div>
+      <div class="badge-row"><span class="tag style">Hotel listing</span></div><div class="amen-icons"><span>📍 Oran area</span><span>🏨 Accommodation</span></div><div class="room-line"><b>Contact property</b> · Rates vary by date</div>
+      <div class="bottomrow"><div class="messages"><div class="cancel">Availability and prices are confirmed directly with the hotel.</div></div><div class="price-block"><div class="price-now">On request</div><button class="book-btn" type="button">Check stay</button></div></div></div>
+    </article>`;
+  const showHotelPage = (page) => {
+    if (page === 1) cardsWrap.innerHTML = firstPageCards;
+    else cardsWrap.innerHTML = (hotelPages[page] || hotelPages[2]).map(makeHotelCard).join('');
+    activeHotelPage = page;
+    document.querySelectorAll('#pagination [data-page]').forEach(button => button.classList.toggle('active', Number(button.dataset.page) === page));
+    document.getElementById('resultCountB').textContent = page === 1 ? '65+ hotels indexed' : `Oran hotel listings · page ${page}`;
+    cardsWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+  document.getElementById('pagination').addEventListener('click', (event) => {
+    const pageButton = event.target.closest('[data-page]');
+    if (pageButton) showHotelPage(Number(pageButton.dataset.page));
+    const actionButton = event.target.closest('[data-page-action]');
+    if (actionButton) {
+      const pages = [1, 2, 3, 4, 10];
+      const position = pages.indexOf(activeHotelPage);
+      showHotelPage(pages[(position + (actionButton.dataset.pageAction === 'next' ? 1 : pages.length - 1)) % pages.length]);
+    }
+  });
+
+  // view toggle (visual only)
+  document.querySelectorAll('.view-toggle button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.view-toggle button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      cardsWrap.classList.toggle('grid-view', btn.getAttribute('aria-label') === 'Grid view');
+    });
+  });
+
+  // page controls and hotel actions
+  document.querySelectorAll('.chip button').forEach(button => button.addEventListener('click', () => button.parentElement.remove()));
+  document.querySelector('.clear-link').addEventListener('click', (event) => {
+    event.preventDefault();
+    document.querySelectorAll('.filters input[type="checkbox"]').forEach(input => input.checked = false);
+    showToast('Filters cleared.');
+  });
+  document.querySelector('.load-more').addEventListener('click', () => {
+    const pages = [1, 2, 3, 4, 10];
+    showHotelPage(pages[(pages.indexOf(activeHotelPage) + 1) % pages.length]);
+  });
+  document.querySelectorAll('.filters input[type="checkbox"]').forEach(input => input.addEventListener('change', () => {
+    showToast(`${document.querySelectorAll('.filters input[type="checkbox"]:checked').length} filter(s) selected.`);
+  }));
+  document.querySelector('.nav-right [aria-label="Saved"]').addEventListener('click', () => {
+    const saved = document.querySelectorAll('.heart.saved').length;
+    showToast(saved ? `${saved} saved hotel${saved === 1 ? '' : 's'} ready to view.` : 'Save hotels with the heart button first.');
+  });
+  document.querySelector('.nav-right .icon-btn').addEventListener('click', (event) => {
+    if (event.currentTarget.id) return;
+    event.currentTarget.textContent = event.currentTarget.textContent.includes('DZD') ? 'EUR ▾' : 'DZD ▾';
+    showToast(`Currency changed to ${event.currentTarget.textContent.trim().replace(' ▾', '')}.`);
+  });
+  document.addEventListener('click', (event) => {
+    const heart = event.target.closest('.heart');
+    if (heart) {
+      heart.classList.toggle('saved');
+      heart.style.background = heart.classList.contains('saved') ? 'var(--coral-tint)' : 'rgba(255,255,255,0.9)';
+      showToast(heart.classList.contains('saved') ? 'Hotel saved to your favorites.' : 'Hotel removed from favorites.');
+    }
+    if (event.target.closest('.book-btn, .reserve-btn, .rsel')) {
+      event.preventDefault();
+      modalOverlay.classList.add('open');
+      showToast('Choose a room to continue your booking.');
+    }
+    if (event.target.closest('.card .arrow')) showToast('More hotel photos would appear here.');
+  });
+
+  // mobile filter sheet
+  const filters = document.getElementById('filters');
+  const backdrop = document.getElementById('sheetBackdrop');
+  document.getElementById('openSheet').addEventListener('click', () => {
+    filters.classList.add('sheet-open'); backdrop.classList.add('on');
+  });
+  backdrop.addEventListener('click', () => {
+    filters.classList.remove('sheet-open'); backdrop.classList.remove('on');
+  });
+
+  // sign in and random password helper
+  const loginOverlay = document.getElementById('loginOverlay');
+  const loginForm = document.getElementById('loginForm');
+  const guestName = document.getElementById('guestName');
+  const guestPassword = document.getElementById('guestPassword');
+  const loginMessage = document.getElementById('loginMessage');
+  const openLogin = document.getElementById('openLogin');
+  const closeLogin = () => {
+    loginOverlay.classList.remove('open');
+    openLogin.focus();
+  };
+  openLogin.addEventListener('click', () => {
+    loginOverlay.classList.add('open');
+    loginMessage.classList.remove('show');
+    window.setTimeout(() => guestName.focus(), 80);
+  });
+  document.getElementById('loginClose').addEventListener('click', closeLogin);
+  loginOverlay.addEventListener('click', (event) => { if (event.target === loginOverlay) closeLogin(); });
+  document.getElementById('generatePassword').addEventListener('click', () => {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%&*';
+    const values = new Uint32Array(14);
+    crypto.getRandomValues(values);
+    guestPassword.value = Array.from(values, value => chars[value % chars.length]).join('');
+    guestPassword.type = 'text';
+    guestPassword.focus();
+  });
+  loginForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (!loginForm.checkValidity()) return;
+    const name = guestName.value.trim();
+    const initials = name.split(/\s+/).map(part => part[0]).join('').slice(0, 2).toUpperCase();
+    openLogin.querySelector('.avatar').textContent = initials || 'G';
+    openLogin.querySelector('span').textContent = name;
+    loginMessage.textContent = 'You are signed in. Your favorite Oran hotels are ready for you.';
+    loginMessage.classList.add('show');
+    window.setTimeout(() => loginOverlay.classList.remove('open'), 1100);
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && loginOverlay.classList.contains('open')) closeLogin();
+  });
+
+  // modal
+  const modalOverlay = document.getElementById('modalOverlay');
+  document.querySelectorAll('[data-modal]').forEach(link => {
+    link.addEventListener('click', (e) => { e.preventDefault(); modalOverlay.classList.add('open'); });
+  });
+  document.getElementById('modalClose').addEventListener('click', () => modalOverlay.classList.remove('open'));
+  modalOverlay.addEventListener('click', (e) => { if(e.target === modalOverlay) modalOverlay.classList.remove('open'); });
+
+  // map button
+  const mapToggleBtn = document.getElementById('mapToggleBtn');
+  const mapMarkers = document.getElementById('mapMarkers');
+  const mapHotelPopup = document.getElementById('mapHotelPopup');
+  const mappedHotels = [...new Set([
+    ...[...document.querySelectorAll('.directory-item')].map(item => item.textContent.trim()),
+    ...[...document.querySelectorAll('.card .name')].map(item => item.textContent.trim())
+  ])];
+  const hotelAreas = [
+    [49, 49], [53, 45], [57, 51], [46, 54], [61, 42], // central Oran
+    [69, 34], [72, 39], [75, 31], [67, 45],           // Bir El Djir / Canastel
+    [51, 72], [56, 76], [48, 79], [61, 68],           // Es Sénia
+    [28, 42], [33, 47], [24, 52], [37, 39],           // Ain El Turck / coast
+    [18, 60], [22, 65], [32, 58], [40, 63]            // Bousfer / Ançor
+  ];
+  mappedHotels.forEach((hotel, index) => {
+    const [baseX, baseY] = hotelAreas[index % hotelAreas.length];
+    const ring = Math.floor(index / hotelAreas.length);
+    const angle = index * 2.4;
+    const pin = document.createElement('span');
+    pin.className = 'map-pin';
+    pin.title = hotel;
+    pin.setAttribute('aria-label', hotel);
+    pin.setAttribute('role', 'button');
+    pin.setAttribute('tabindex', '0');
+    pin.style.left = `${baseX + Math.cos(angle) * ring * 1.7}%`;
+    pin.style.top = `${baseY + Math.sin(angle) * ring * 1.5}%`;
+    const showHotelOnMap = (event) => {
+      event.stopPropagation();
+      mapHotelPopup.innerHTML = `<b>${hotel}</b><span>Selected hotel · click a result card below to view rooms</span>`;
+      mapHotelPopup.classList.add('show');
+      if (!mapToggleBtn.classList.contains('map-open')) {
+        mapToggleBtn.classList.add('map-open');
+        mapToggleBtn.querySelector('.label').lastChild.textContent = ' Hide map';
+      }
+      showToast(`${hotel} selected on the map.`);
+    };
+    pin.addEventListener('click', showHotelOnMap);
+    pin.addEventListener('keydown', (event) => { if (event.key === 'Enter' || event.key === ' ') showHotelOnMap(event); });
+    mapMarkers.appendChild(pin);
+  });
+  mapToggleBtn.addEventListener('click', (event) => {
+    if (event.target.closest('.map-pin')) return;
+    const expanded = mapToggleBtn.classList.toggle('map-open');
+    mapToggleBtn.querySelector('.label').lastChild.textContent = expanded ? ' Hide map' : ' Show map';
+    showToast(expanded ? `${mappedHotels.length} hotel markers are shown.` : 'Map collapsed.');
+  });
+</script>
+</body>
+</html>
